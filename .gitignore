@@ -1,67 +1,53 @@
-# ── Python ──────────────────────────────────────────────
-__pycache__/
-*.py[cod]
-*.pyo
-*.pyd
-.Python
-*.egg
-*.egg-info/
-dist/
-build/
-eggs/
-parts/
-var/
-sdist/
-develop-eggs/
-.installed.cfg
-lib/
-lib64/
+# ── Dataset (too large for GitHub, download from Kaggle) ────────────────
+CarDD_release/
+object_detection/CarDD_YOLO/
 
-# ── Jupyter Notebook ────────────────────────────────────
-.ipynb_checkpoints/
-*/.ipynb_checkpoints/*
-
-# ── Virtual environments ─────────────────────────────────
-.env
-.venv
-env/
-venv/
-ENV/
-
-# ── Model weights (too large for GitHub) ────────────────
+# ── Model weights (too large for GitHub) ────────────────────────────────
 *.pth
 *.pt
 *.ckpt
 *.h5
 *.pkl
 
-# ── Data files (use Kaggle dataset instead) ─────────────
-*.csv
-*.json
-data/
-datasets/
-
-# ── Outputs & logs ───────────────────────────────────────
-*.log
+# ── Training runs & outputs ──────────────────────────────────────────────
 runs/
 outputs/
 results/
 logs/
 
-# ── Images generated during training ────────────────────
+# ── Python ──────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ── Jupyter Notebook ─────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ── Virtual environments ──────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+
+# ── Generated images ──────────────────────────────────────────────────────
 *.png
 *.jpg
 *.jpeg
 
-# ── OS files ─────────────────────────────────────────────
+# ── Data files ────────────────────────────────────────────────────────────
+*.csv
+*.json
+
+# ── OS files ──────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# ── IDEs ─────────────────────────────────────────────────
+# ── IDEs ──────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln

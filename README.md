@@ -1,12 +1,14 @@
-# 🚗 Car Damage Classifier
+# 🚗 Car Damage Detection
 
-A deep learning project for multi-label car damage classification using EfficientNet-B3 and PyTorch.
+A deep learning project for detecting and classifying car damage using computer vision. The project covers multiple tasks — starting from classification, moving to object detection, with more to come.
 
 ---
 
 ## 📌 Project Overview
 
-Given an image of a damaged car, the model predicts **which types of damage are present** in the image. This is a **multi-label classification** problem — meaning a single image can have multiple damage types at the same time.
+Given an image of a damaged car, the models can:
+- **Classify** what types of damage are present (multi-label classification)
+- **Locate** exactly where the damage is (object detection with bounding boxes)
 
 ---
 
@@ -15,7 +17,9 @@ Given an image of a damaged car, the model predicts **which types of damage are 
 ```
 car-damage/
 ├── classification/
-│   └── car_damage_classification.ipynb   # Full pipeline notebook
+│   └── car_damage_classification.ipynb   # Multi-label classification pipeline
+├── object_detection/
+│   └── car_damage_detection.ipynb        # YOLOv8 object detection pipeline
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -43,17 +47,15 @@ car-damage/
 
 ---
 
-## 🧠 Model Architecture
+## 📁 Task 1 — Multi-Label Classification
 
+### Model
 - **Backbone**: EfficientNet-B3 pretrained on ImageNet
 - **Strategy**: Transfer learning — frozen early layers, fine-tuned last 3 blocks
 - **Head**: Custom classifier (Linear → ReLU → Dropout → Linear)
 - **Output**: 6 independent probabilities (one per damage class)
 
----
-
-## ⚙️ Training Details
-
+### Training
 | Parameter | Value |
 |-----------|-------|
 | Epochs | 60 |
@@ -64,11 +66,7 @@ car-damage/
 | Image size | 224 × 224 |
 | Device | GPU (CUDA) |
 
----
-
-## 📈 Results
-
-### Per-Class Metrics (Test Set)
+### Results (Test Set)
 
 | Class | ROC-AUC | F1 @ 0.5 | F1 @ Best Threshold |
 |-------|---------|----------|----------------------|
@@ -84,6 +82,51 @@ car-damage/
 
 ---
 
+## 📁 Task 2 — Object Detection
+
+### Model
+- **Architecture**: YOLOv8m (medium) pretrained on COCO
+- **Strategy**: Fine-tuned on CarDD dataset
+- **Input**: COCO annotations converted to YOLO format
+- **Output**: Bounding boxes + class labels + confidence scores
+
+### Training
+| Parameter | Value |
+|-----------|-------|
+| Epochs | 50 |
+| Batch size | 16 |
+| Optimizer | AdamW (auto) |
+| Image size | 640 × 640 |
+| Device | GPU (CUDA) |
+| Early stopping | patience = 15 |
+
+### Results (Test Set)
+
+| Class | mAP50 | mAP50-95 |
+|-------|-------|----------|
+| Glass Shatter | 0.986 | 0.937 |
+| Tire Flat | 0.936 | 0.902 |
+| Lamp Broken | 0.889 | 0.781 |
+| Dent | 0.618 | 0.373 |
+| Scratch | 0.585 | 0.336 |
+| Crack | 0.499 | 0.262 |
+| **Overall** | **0.752** | **0.599** |
+
+---
+
+## 📈 Classification vs Detection Comparison
+
+| Class | Classification F1 | Detection mAP50 |
+|-------|------------------|-----------------|
+| Glass Shatter | 0.90 | 0.986 |
+| Tire Flat | 0.85 | 0.936 |
+| Lamp Broken | 0.66 | 0.889 |
+| Dent | 0.75 | 0.618 |
+| Scratch | 0.79 | 0.585 |
+| Crack | 0.49 | 0.499 |
+
+---
+
 ## 🚀 How to Run
 
 1. Clone the repo:
@@ -92,22 +135,22 @@ git clone https://github.com/Elsaraf1/car-damage.git
 cd car-damage
 ```
 
-2. Open the notebook:
-```
-classification/car_damage_classification.ipynb
-```
+2. Download the dataset from [Kaggle](https://www.kaggle.com/datasets/nasimetemadi/car-damage-detection) and place it in the root folder.
 
-3. Run on Kaggle with GPU enabled:
-   - Upload the notebook to Kaggle
+3. Open the notebook for the task you want:
+   - `classification/car_damage_classification.ipynb`
+   - `object_detection/car_damage_detection.ipynb`
+
+4. For best results run on Kaggle with GPU:
    - Enable GPU: **Settings → Accelerator → GPU T4 x2**
-   - Add the dataset: [CarDD on Kaggle](https://www.kaggle.com/datasets/nasimetemadi/car-damage-detection)
+   - Add the dataset directly from Kaggle
 
 ---
 
 ## 🔜 Roadmap
 
 - [x] Multi-label classification (EfficientNet-B3)
-- [ ] Object detection (damage localization)
+- [x] Object detection (YOLOv8m)
 - [ ] Instance segmentation
 - [ ] Salient object detection
 
