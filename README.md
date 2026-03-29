@@ -1,6 +1,6 @@
 # 🚗 Car Damage Detection
 
-A deep learning project for detecting and classifying car damage using computer vision. The project covers multiple tasks — starting from classification, moving to object detection, with more to come.
+A deep learning project for detecting and classifying car damage using computer vision. The project covers multiple tasks — classification, object detection, and instance segmentation.
 
 ---
 
@@ -9,6 +9,7 @@ A deep learning project for detecting and classifying car damage using computer 
 Given an image of a damaged car, the models can:
 - **Classify** what types of damage are present (multi-label classification)
 - **Locate** exactly where the damage is (object detection with bounding boxes)
+- **Outline** the exact shape of each damage (instance segmentation with masks)
 
 ---
 
@@ -17,9 +18,11 @@ Given an image of a damaged car, the models can:
 ```
 car-damage/
 ├── classification/
-│   └── car_damage_classification.ipynb   # Multi-label classification pipeline
+│   └── car_damage_classification.ipynb       # Multi-label classification pipeline
 ├── object_detection/
-│   └── car_damage_detection.ipynb        # YOLOv8 object detection pipeline
+│   └── car_damage_detection.ipynb            # YOLOv8 object detection pipeline
+├── instance_segmentation/
+│   └── car_damage_segmentation.ipynb         # YOLOv8 instance segmentation pipeline
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -85,7 +88,7 @@ car-damage/
 ## 📁 Task 2 — Object Detection
 
 ### Model
-- **Architecture**: YOLOv8m (medium) pretrained on COCO
+- **Architecture**: YOLOv8m pretrained on COCO
 - **Strategy**: Fine-tuned on CarDD dataset
 - **Input**: COCO annotations converted to YOLO format
 - **Output**: Bounding boxes + class labels + confidence scores
@@ -95,7 +98,6 @@ car-damage/
 |-----------|-------|
 | Epochs | 50 |
 | Batch size | 16 |
-| Optimizer | AdamW (auto) |
 | Image size | 640 × 640 |
 | Device | GPU (CUDA) |
 | Early stopping | patience = 15 |
@@ -114,16 +116,48 @@ car-damage/
 
 ---
 
-## 📈 Classification vs Detection Comparison
+## 📁 Task 3 — Instance Segmentation
 
-| Class | Classification F1 | Detection mAP50 |
-|-------|------------------|-----------------|
-| Glass Shatter | 0.90 | 0.986 |
-| Tire Flat | 0.85 | 0.936 |
-| Lamp Broken | 0.66 | 0.889 |
-| Dent | 0.75 | 0.618 |
-| Scratch | 0.79 | 0.585 |
-| Crack | 0.49 | 0.499 |
+### Model
+- **Architecture**: YOLOv8m-seg pretrained on COCO
+- **Strategy**: Fine-tuned on CarDD dataset
+- **Input**: COCO polygon annotations converted to YOLO segmentation format
+- **Output**: Bounding boxes + pixel-level masks per damage instance
+
+### Training
+| Parameter | Value |
+|-----------|-------|
+| Epochs | 100 |
+| Batch size | 16 |
+| Image size | 640 × 640 |
+| Device | GPU (CUDA) |
+| Early stopping | patience = 15 |
+
+### Results (Test Set)
+
+| Class | Box mAP50 | Box mAP50-95 | Mask mAP50 | Mask mAP50-95 |
+|-------|-----------|--------------|------------|---------------|
+| Glass Shatter | 0.991 | 0.940 | 0.991 | 0.920 |
+| Tire Flat | 0.895 | 0.884 | 0.895 | 0.887 |
+| Lamp Broken | 0.885 | 0.778 | 0.885 | 0.769 |
+| Dent | 0.631 | 0.387 | 0.642 | 0.362 |
+| Scratch | 0.611 | 0.360 | 0.598 | 0.297 |
+| Crack | 0.589 | 0.349 | 0.566 | 0.237 |
+| **Overall** | **0.767** | **0.617** | **0.763** | **0.578** |
+
+---
+
+## 📈 All Tasks Comparison
+
+| Class | Classification F1 | Detection mAP50 | Segmentation mAP50 |
+|-------|------------------|-----------------|-------------------|
+| Glass Shatter | 0.90 | 0.986 | 0.991 |
+| Tire Flat | 0.85 | 0.936 | 0.895 |
+| Lamp Broken | 0.66 | 0.889 | 0.885 |
+| Dent | 0.75 | 0.618 | 0.642 |
+| Scratch | 0.79 | 0.585 | 0.598 |
+| Crack | 0.49 | 0.499 | 0.566 |
+| **Overall** | **0.757** | **0.752** | **0.763** |
 
 ---
 
@@ -140,6 +174,7 @@ cd car-damage
 3. Open the notebook for the task you want:
    - `classification/car_damage_classification.ipynb`
    - `object_detection/car_damage_detection.ipynb`
+   - `instance_segmentation/car_damage_segmentation.ipynb`
 
 4. For best results run on Kaggle with GPU:
    - Enable GPU: **Settings → Accelerator → GPU T4 x2**
@@ -151,7 +186,7 @@ cd car-damage
 
 - [x] Multi-label classification (EfficientNet-B3)
 - [x] Object detection (YOLOv8m)
-- [ ] Instance segmentation
+- [x] Instance segmentation (YOLOv8m-seg)
 - [ ] Salient object detection
 
 ---

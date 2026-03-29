@@ -1,6 +1,7 @@
 # ── Dataset (too large for GitHub, download from Kaggle) ────────────────
 CarDD_release/
 object_detection/CarDD_YOLO/
+instance_segmentation/CarDD_YOLO_SEG/
 
 # ── Model weights (too large for GitHub) ────────────────────────────────
 *.pth
