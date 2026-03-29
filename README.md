@@ -96,7 +96,7 @@ car-damage/
 ### Training
 | Parameter | Value |
 |-----------|-------|
-| Epochs | 50 |
+| Epochs | 100 |
 | Batch size | 16 |
 | Image size | 640 × 640 |
 | Device | GPU (CUDA) |
