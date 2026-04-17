@@ -1,54 +1,46 @@
-# ── Dataset (too large for GitHub, download from Kaggle) ────────────────
+# ── Dataset (too large for GitHub) ──────────────────────────────────────────
 CarDD_release/
-object_detection/CarDD_YOLO/
-instance_segmentation/CarDD_YOLO_SEG/
+CarDD_YOLO/
+CarDD_YOLO_SEG/
 
-# ── Model weights (too large for GitHub) ────────────────────────────────
-*.pth
+# ── Model weights ────────────────────────────────────────────────────────────
 *.pt
-*.ckpt
-*.h5
-*.pkl
+*.pth
+*.onnx
+*.torchscript
 
-# ── Training runs & outputs ──────────────────────────────────────────────
+# ── YOLO training runs ───────────────────────────────────────────────────────
 runs/
-outputs/
-results/
-logs/
 
-# ── Python ──────────────────────────────────────────────────────────────
+# ── Python ───────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.pyo
-*.egg
 *.egg-info/
 dist/
 build/
+.eggs/
+*.egg
 
-# ── Jupyter Notebook ─────────────────────────────────────────────────────
+# ── Jupyter ──────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
-*/.ipynb_checkpoints/*
+*.ipynb_checkpoints
 
-# ── Virtual environments ──────────────────────────────────────────────────
-.env
-.venv
-env/
+# ── Virtual environments ─────────────────────────────────────────────────────
 venv/
+.venv/
+env/
+.env/
 
-# ── Generated images ──────────────────────────────────────────────────────
-*.png
-*.jpg
-*.jpeg
-
-# ── Data files ────────────────────────────────────────────────────────────
-*.csv
-*.json
-
-# ── OS files ──────────────────────────────────────────────────────────────
+# ── OS / editor ──────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# ── IDEs ──────────────────────────────────────────────────────────────────
-.vscode/
 .idea/
+.vscode/
+*.swp
+*.swo
+
+# ── Misc outputs ─────────────────────────────────────────────────────────────
+*.log
+*.csv
+best_thresholds.json

@@ -1,15 +1,17 @@
 # 🚗 Car Damage Detection
 
-A deep learning project for detecting and classifying car damage using computer vision. The project covers multiple tasks — classification, object detection, and instance segmentation.
+A deep learning project for detecting and classifying car damage using computer vision. The project covers four tasks — classification, object detection, instance segmentation, and salient object detection.
 
 ---
 
 ## 📌 Project Overview
 
 Given an image of a damaged car, the models can:
+
 - **Classify** what types of damage are present (multi-label classification)
 - **Locate** exactly where the damage is (object detection with bounding boxes)
 - **Outline** the exact shape of each damage (instance segmentation with masks)
+- **Highlight** the overall damage region as a saliency map (salient object detection)
 
 ---
 
@@ -23,6 +25,7 @@ car-damage/
 │   └── car_damage_detection.ipynb            # YOLOv8 object detection pipeline
 ├── instance_segmentation/
 │   └── car_damage_segmentation.ipynb         # YOLOv8 instance segmentation pipeline
+│   └── car_damage_sod.ipynb                  # U2-Net salient object detection pipeline
 ├── .gitignore
 ├── LICENSE
 └── README.md
@@ -39,8 +42,8 @@ car-damage/
 
 ### 🏷️ Damage Categories (6 Classes)
 
-| Class | # Images |
-|-------|----------|
+| Class | # Instances |
+|-------|------------|
 | Scratch | 2,121 |
 | Dent | 1,751 |
 | Lamp Broken | 693 |
@@ -59,6 +62,7 @@ car-damage/
 - **Output**: 6 independent probabilities (one per damage class)
 
 ### Training
+
 | Parameter | Value |
 |-----------|-------|
 | Epochs | 60 |
@@ -72,7 +76,7 @@ car-damage/
 ### Results (Test Set)
 
 | Class | ROC-AUC | F1 @ 0.5 | F1 @ Best Threshold |
-|-------|---------|----------|----------------------|
+|-------|---------|----------|---------------------|
 | Glass Shatter | 0.9899 | 0.8535 | 0.8986 |
 | Tire Flat | 0.9880 | 0.6988 | 0.8519 |
 | Lamp Broken | 0.8994 | 0.5846 | 0.6567 |
@@ -94,9 +98,10 @@ car-damage/
 - **Output**: Bounding boxes + class labels + confidence scores
 
 ### Training
+
 | Parameter | Value |
 |-----------|-------|
-| Epochs | 100 |
+| Epochs | 50 |
 | Batch size | 16 |
 | Image size | 640 × 640 |
 | Device | GPU (CUDA) |
@@ -125,6 +130,7 @@ car-damage/
 - **Output**: Bounding boxes + pixel-level masks per damage instance
 
 ### Training
+
 | Parameter | Value |
 |-----------|-------|
 | Epochs | 100 |
@@ -147,10 +153,40 @@ car-damage/
 
 ---
 
+## 📁 Task 4 — Salient Object Detection
+
+### Model
+- **Architecture**: U2-Net (lite version, 1.1M parameters) — custom PyTorch implementation
+- **Design**: Nested U-Nets using RSU (Residual U-blocks) for multi-scale feature extraction
+- **Output**: 7 saliency maps (1 fused + 6 deep supervision side outputs); only the fused map is used at inference
+- **Dataset**: CarDD-SOD split (binary masks: 0 = background, 255 = damage)
+
+### Training
+
+| Parameter | Value |
+|-----------|-------|
+| Epochs | 50 |
+| Batch size | 4 |
+| Optimizer | Adam (lr = 1e-3) |
+| Loss | BCEWithLogitsLoss on all 7 outputs (deep supervision) |
+| Image size | 256 × 256 |
+| Device | GPU (CUDA) |
+
+### Results (Test Set)
+
+| Metric | Score |
+|--------|-------|
+| MAE ↓ | 0.123 |
+| F-measure ↑ | 0.712 |
+
+> 📝 The lite version was used instead of the original 44M-parameter U2-Net to avoid out-of-memory crashes on Kaggle. `nn.DataParallel` was removed to prevent progressive RAM leaks.
+
+---
+
 ## 📈 All Tasks Comparison
 
 | Class | Classification F1 | Detection mAP50 | Segmentation mAP50 |
-|-------|------------------|-----------------|-------------------|
+|-------|------------------|-----------------|--------------------|
 | Glass Shatter | 0.90 | 0.986 | 0.991 |
 | Tire Flat | 0.85 | 0.936 | 0.895 |
 | Lamp Broken | 0.66 | 0.889 | 0.885 |
@@ -158,6 +194,8 @@ car-damage/
 | Scratch | 0.79 | 0.585 | 0.598 |
 | Crack | 0.49 | 0.499 | 0.566 |
 | **Overall** | **0.757** | **0.752** | **0.763** |
+
+> **Pattern**: Glass shatter and tire flat are consistently the easiest classes; crack is consistently the hardest due to limited training examples.
 
 ---
 
@@ -175,19 +213,20 @@ cd car-damage
    - `classification/car_damage_classification.ipynb`
    - `object_detection/car_damage_detection.ipynb`
    - `instance_segmentation/car_damage_segmentation.ipynb`
+   - `instance_segmentation/car_damage_sod.ipynb`
 
-4. For best results run on Kaggle with GPU:
+4. For best results, run on Kaggle with GPU:
    - Enable GPU: **Settings → Accelerator → GPU T4 x2**
    - Add the dataset directly from Kaggle
 
 ---
 
-## 🔜 Roadmap
+## ✅ Roadmap
 
 - [x] Multi-label classification (EfficientNet-B3)
 - [x] Object detection (YOLOv8m)
 - [x] Instance segmentation (YOLOv8m-seg)
-- [ ] Salient object detection
+- [x] Salient object detection (U2-Net)
 
 ---
 
