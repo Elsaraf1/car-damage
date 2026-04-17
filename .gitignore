@@ -4,8 +4,7 @@ CarDD_YOLO/
 CarDD_YOLO_SEG/
 
 # ── Model weights ────────────────────────────────────────────────────────────
-*.pt
-*.pth
+
 *.onnx
 *.torchscript
 
